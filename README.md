@@ -1,0 +1,1 @@
+# Optimized Back EMF Observer

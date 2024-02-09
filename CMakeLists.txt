@@ -8,8 +8,9 @@ set(CMAKE_CXX_STANDARD 20) # C++20 Standard
   target_link_libraries(pi_test ${PROJECT_NAME})
 
 # Declare a C++ library
-add_library(${PROJECT_NAME}
-    src/controllers.cpp
+add_library(bemf_observer
+    src/controllers/pid_controller.cpp
+    src/controllers/pi_controller.cpp
 )
 
 # Include Header files

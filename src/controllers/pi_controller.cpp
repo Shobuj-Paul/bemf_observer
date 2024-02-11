@@ -2,7 +2,7 @@
 
 controllers::pi_controller::pi_controller() : error_sum(0), output(0), error_prev(0) {}
 
-float controllers::clamp(float input, float upper_limit, float lower_limit) {
+float controllers::pi_controller::clamp(float input, float upper_limit, float lower_limit) {
   if(input < lower_limit)
     return lower_limit;
   else if(input > upper_limit)
@@ -11,7 +11,7 @@ float controllers::clamp(float input, float upper_limit, float lower_limit) {
     return input;
 }
 
-float controllers::reset(float input, float output, float upper_limit, float lower_limit) {
+float controllers::pi_controller::reset(float input, float output, float upper_limit, float lower_limit) {
   if(input > 0 && output >= upper_limit)
     return 0;
   else if(input < 0 && output <= lower_limit)

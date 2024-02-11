@@ -1,22 +1,25 @@
 #pragma once
 #define PI 3.1415
 
-namespace operators {
-  class differentiator {
-    float output, input_prev, Ts;
-    
-    public:
-    differentiator();
-    float loop(float input, float Ts);
-  };
+namespace operators
+{
+class differentiator
+{
+  float output, input_prev, Ts;
 
-  class integrator {
-    float output, input_prev, Ts;
-    
-    public:
-    integrator();
-    float loop(float input, float Ts);
-  };
+public:
+  differentiator();
+  float loop(float input, float Ts);
+};
 
-  float wrap_angle(float input);
-}
+class integrator
+{
+  float output, input_prev, Ts;
+
+public:
+  integrator();
+  float loop(float input, float Ts);
+};
+
+float wrap_angle(float input);
+}  // namespace operators

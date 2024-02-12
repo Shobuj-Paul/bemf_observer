@@ -20,4 +20,4 @@ public:
   float loop(float input, float Ts);
 };
 
-}  // namespace operators
+}  // namespace math

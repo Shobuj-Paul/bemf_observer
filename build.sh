@@ -1,9 +1,27 @@
 #!/usr/bin/bash
 
-# This script is used to build the project.
+# This script builds the project, and if --clean argument
+# is passed bin and build directories are removed.
 
 # Path to the project root directory.
 PROJECT_DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
+
+# Path to the build directory.
+BUILD_DIR=${PROJECT_DIR}/build
+BIN_DIR=${PROJECT_DIR}/bin
+
+# Check if --clean flag is passed
+for arg in "$@"
+do
+    case $arg in
+        --clean)
+            echo "Cleaning build and bin directories..."
+            rm -rf ${BUILD_DIR}
+            rm -rf ${BIN_DIR}
+            exit 0
+            ;;
+    esac
+done
 
 # Path to the build directory.
 BUILD_DIR=${PROJECT_DIR}/build
@@ -18,28 +36,10 @@ cd ${BUILD_DIR}
 
 # Configure and build the project.
 cmake ${PROJECT_DIR}
-make -j4
+make
 
-# Create an executable directory.
+# Executable directory.
 EXEC_DIR=${PROJECT_DIR}/bin
-if [ -d "$EXEC_DIR" ]; then
-    echo "Executable directory exists."
-else
-    echo "Executable directory does not exist."
-    echo "Creating executable directory..."
-    mkdir -p ${EXEC_DIR}
-fi
-
-# Copy executables to the executable directory.
-for entry in "$BUILD_DIR"/*
-do
-    if [ -x "$entry" ]; then
-        cp "$entry" "$EXEC_DIR" > /dev/null 2>&1 || :
-    else
-        :
-    fi
-done
-echo "Created executables in $EXEC_DIR."
 
 # List executables in the executable directory in logs.
 for entry in "$EXEC_DIR"/*

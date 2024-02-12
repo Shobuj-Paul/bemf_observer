@@ -4,7 +4,7 @@
 
 using namespace controllers;
 
-int main(int argc, char* argv[])
+int main()
 {
   float x_meas = 0, x_ref = 10;
   pi_config config = { 2, 1, Ts, 10, -10 };

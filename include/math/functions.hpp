@@ -6,5 +6,6 @@ namespace math {
   float wrap_angle(float input);
   float sin(float angle);
   float cos(float angle);
+  float atan(float input);
   float atan2(float y, float x);
 }

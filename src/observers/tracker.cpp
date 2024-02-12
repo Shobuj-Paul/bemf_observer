@@ -7,6 +7,11 @@ observers::position_tracker::position_tracker(controllers::pi_config config, flo
 
 float observers::position_tracker::loop(float phase_error)
 {
-  speed_est += Ts * tracker.loop(phase_error, tracker_config);
-  angle_est = operators::wrap_angle(integrate.loop(speed_est, Ts));
+  angle_est += Ts * angle_controller.loop(phase_error, tracker_config);
+  return math::wrap_angle(angle_est);
+}
+
+float observers::position_tracker::speed_tracker(float angle_est)
+{
+  return angle_integrator.loop(angle_est, Ts);
 }

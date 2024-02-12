@@ -11,6 +11,11 @@ set(CMAKE_CXX_STANDARD 20) # C++20 Standard
 add_library(bemf_observer
     src/controllers/pid_controller.cpp
     src/controllers/pi_controller.cpp
+    src/math/foc.cpp
+    src/math/function.cpp
+    src/math/operators.cpp
+    src/observers/tracker.cpp
+    src/observers/dq_update.cpp
 )
 
 # Include Header files

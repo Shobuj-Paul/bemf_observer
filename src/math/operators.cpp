@@ -1,29 +1,23 @@
 #include <math/operators.hpp>
 
-operators::differentiator::differentiator() : input_prev(0)
+math::differentiator::differentiator() : input_prev(0)
 {
 }
 
-float operators::differentiator::loop(float input, float Ts)
+float math::differentiator::loop(float input, float Ts)
 {
   output = (input - input_prev) / Ts;
+  input_prev = output;
+  return output;
 }
 
-operators::integrator::integrator() : output(0), input_prev(0)
+math::integrator::integrator() : output(0), input_prev(0)
 {
 }
 
-float operators::integrator::loop(float input, float Ts)
+float math::integrator::loop(float input, float Ts)
 {
   output += Ts * (input + input_prev) / 2;
-}
-
-float operators::wrap_angle(float input)
-{
-  if (input < -PI)
-    return input + PI;
-  if (input > PI)
-    return input - PI;
-  else
-    return input;
+  input_prev = output;
+  return output;
 }

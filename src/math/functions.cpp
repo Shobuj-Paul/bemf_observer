@@ -1,5 +1,13 @@
 #include <math/functions.hpp>
 
+float math::abs(float input)
+{
+  if (input < 0)
+    return -input;
+  else
+    return input;
+}
+
 float math::pow(float input, int power)
 {
   float output = 1;

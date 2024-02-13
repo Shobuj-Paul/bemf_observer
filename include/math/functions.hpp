@@ -4,6 +4,7 @@
 
 namespace math
 {
+float abs(float input);
 float pow(float input, int power);
 float wrap_angle(float input);
 float sin(float angle);

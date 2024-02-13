@@ -13,5 +13,6 @@ float observers::position_tracker::loop(float phase_error)
 
 float observers::position_tracker::speed_tracker(float angle_est)
 {
-  return angle_integrator.loop(angle_est, Ts);
+  speed_est = angle_integrator.loop(angle_est, Ts);
+  return speed_est;
 }

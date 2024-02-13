@@ -24,8 +24,6 @@ float math::sin(float angle)
     angle = PI - angle;
   else if (angle < -PI / 2)
     angle = -PI - angle;
-  else
-    angle = angle;
   return (angle - pow(angle, 3) / 6 + pow(angle, 5) / 120 - pow(angle, 7) / 5040);
 }
 

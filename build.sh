@@ -36,20 +36,11 @@ cd ${BUILD_DIR}
 
 # Configure and build the project.
 cmake ${PROJECT_DIR}
-make
+make -j4
+ctest -C Release
 
 # Executable directory.
 EXEC_DIR=${PROJECT_DIR}/bin
 
-# List executables in the executable directory in logs.
-for entry in "$EXEC_DIR"/*
-do
-    if [ -x "$entry" ]; then
-        echo "Executable: $(basename $entry) is in $EXEC_DIR" >> ${BUILD_DIR}/build.log
-    else
-        :
-    fi
-done
-
-# Clean the executables from build directory.
-make clean
+echo -e "\nExecutable files generated:"
+cd "$EXEC_DIR" && find . -type f -executable

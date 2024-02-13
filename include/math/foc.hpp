@@ -30,6 +30,11 @@ struct frame_dq
 };
 
 frame_alpha_beta clarke_transform(frame_abc X);
+
 frame_dq park_transform(frame_alpha_beta X, float angle);
+
+frame_abc inverse_clarke_transform(frame_alpha_beta X);
+
+frame_alpha_beta inverse_park_transform(frame_dq X, float angle);
 
 }  // namespace math

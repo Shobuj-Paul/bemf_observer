@@ -35,12 +35,16 @@ fi
 cd ${BUILD_DIR}
 
 # Configure and build the project.
-cmake ${PROJECT_DIR}
+cmake ..
 make -j4
-ctest -C Release
 
-# Executable directory.
-EXEC_DIR=${PROJECT_DIR}/bin
+# If make completes successfully, run ctest
+if [ $? -eq 0 ]; then
+  cd ${BUILD_DIR}
+  ctest -C Release
+else
+  echo -e "\nMake failed, so ctest will not be run."
+fi
 
 echo -e "\nExecutable files generated:"
-cd "$EXEC_DIR" && find . -type f -executable
+cd "$PROJECT_DIR" && find ./bin -type f -executable

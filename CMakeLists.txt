@@ -12,14 +12,15 @@ enable_testing()
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 # Declare a C++ library
-add_library(bemf_observer
+add_library(${PROJECT_NAME}
     src/controllers/pid_controller.cpp
     src/controllers/pi_controller.cpp
-    src/math/foc.cpp
     src/math/functions.cpp
+    src/math/foc.cpp
     src/math/operators.cpp
     src/observers/tracker.cpp
     src/observers/dq_update.cpp
+    src/observers/bemf_observer.cpp
 )
 
 ## Add C++ tests here
@@ -30,6 +31,10 @@ add_test(NAME pi_test COMMAND "${CMAKE_SOURCE_DIR}/bin/pi_test")
 add_executable(pid_test tests/pid_test.cpp)
 target_link_libraries(pid_test ${PROJECT_NAME})
 add_test(NAME pid_test COMMAND "${CMAKE_SOURCE_DIR}/bin/pid_test")
+
+add_executable(bemf_observer_test tests/bemf_observer_test.cpp)
+target_link_libraries(bemf_observer_test ${PROJECT_NAME})
+add_test(NAME bemf_observer_test COMMAND "${CMAKE_SOURCE_DIR}/bin/bemf_observer_test")
 
 # Include Header files
 include_directories(

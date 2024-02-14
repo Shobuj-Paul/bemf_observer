@@ -16,6 +16,6 @@ class pid_controller
 
 public:
   pid_controller();
-  float loop(float error, const pid_config& config);
+  float loop(float error, const pid_config& config, float external_integral = 0, bool reset_integral = false);
 };
 }  // namespace controllers

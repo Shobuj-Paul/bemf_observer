@@ -16,7 +16,7 @@ float math::pow(float input, int power)
   return output;
 }
 
-float math::wrap_angle(float input)
+float math::wrapAngle(float input)
 {
   if (input < -PI)
     return input + PI;

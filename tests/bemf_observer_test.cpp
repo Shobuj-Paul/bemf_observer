@@ -8,9 +8,9 @@
 
 int main() 
 {
-  observers::bemf_gains gains(1, 1, 1, Ts, 0);
-  controllers::pi_config update_config = {1, 1, Ts, 180, -180};
-  controllers::pi_config tracker_config  = {1, 1, Ts, 180,-180};
+  observers::BemfGains gains(1, 1, 1, Ts, 0);
+  controllers::PIConfig update_config = {1, 1, Ts, 180, -180};
+  controllers::PIConfig tracker_config  = {1, 1, Ts, 180,-180};
   observers::bemf_observer bemf_observer(gains, update_config, tracker_config, Ts);
 
   math::frame_abc line_currents;

@@ -12,7 +12,7 @@ class bemf_observer
     position_tracker tracker;
     float speed, angle, Ts;
   public:
-    bemf_observer(const bemf_gains& gains, const controllers::pi_config& update_config, const controllers::pi_config& tracker_config, float Ts);
+    bemf_observer(const BemfGains& gains, const controllers::PIConfig& update_config, const controllers::PIConfig& tracker_config, float Ts);
     float loop(math::frame_abc line_currents, math::frame_abc line_voltages);
 };
 } // namespace observers

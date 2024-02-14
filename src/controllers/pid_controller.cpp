@@ -24,14 +24,17 @@ float controllers::pid_controller::reset(float input, float output, float upper_
     return input;
 }
 
-float controllers::pid_controller::loop(float error, const pid_config& config)
+float controllers::pid_controller::loop(float error, const pid_config& config, float external_integral, bool reset_integral)
 {
   if (error > 0 && output >= config.upper_limit)
     error = 0;
   else if (error < 0 && output <= config.lower_limit)
     error = 0;
 
-  error_sum += clamp(config.Ki * config.Ts * (error + error_prev) / 2, config.upper_limit, config.lower_limit);
+  error_sum += config.Ki * config.Ts * (error + error_prev) / 2;
+  if (reset_integral)
+    error_sum = external_integral;
+  error_sum = clamp(error_sum, config.upper_limit, config.lower_limit);
   float derror = (error - error_prev) / config.Ts;
   output =
       clamp(config.Kp * error + config.Ki * error_sum + config.Kd * derror, config.upper_limit, config.lower_limit);

@@ -8,8 +8,8 @@ using namespace controllers;
 int main()
 {
   float x_meas = 0, x_ref = 10;
-  pi_config config = { 2, 1, Ts, 10, -10 };
-  pi_controller controller;
+  PIConfig config = { 2, 1, Ts, 10, -10 };
+  PIController controller;
   std::cout << " Starting loop" << std::endl;
   for (float t = 0; t < 10; t += Ts)
   {

@@ -1,6 +1,6 @@
 #include <observers/bemf_observer.hpp>
 
-observers::bemf_observer::bemf_observer(const bemf_gains& gains, const controllers::pi_config& update_config, const controllers::pi_config& tracker_config, float Ts)
+observers::bemf_observer::bemf_observer(const BemfGains& gains, const controllers::PIConfig& update_config, const controllers::PIConfig& tracker_config, float Ts)
   : dq_update(update_config, gains, Ts), tracker(tracker_config, Ts), Ts(Ts)
 {
 }

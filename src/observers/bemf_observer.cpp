@@ -4,15 +4,15 @@ observers::BemfObserver::BemfObserver() : speed_prev(0), angle_prev(0)
 {
 }
 
-observers::BemfOutput observers::BemfObserver::loop(math::frame_abc line_currents, math::frame_abc line_voltages, math::frame_abc duties, 
-                float Vbus, const float Ts, const SetBemfParams& set_bemf_params, const SetTrackerParams& set_tracker_params, 
-                const ExtBemfParams& ext_bemf_params, const ExtTrackerParams& ext_tracker_params, uint8_t pos_obs_mode, uint8_t idle_mode, 
+observers::BemfOutput observers::BemfObserver::loop(math::FrameABC line_currents, math::FrameABC line_voltages, math::FrameABC duties,
+                float Vbus, const float Ts, const SetBemfParams& set_bemf_params, const SetTrackerParams& set_tracker_params,
+                const ExtBemfParams& ext_bemf_params, const ExtTrackerParams& ext_tracker_params, uint8_t pos_obs_mode, uint8_t idle_mode,
                 uint8_t opmode, const uint8_t num_rotor_poles, const uint8_t freq_mode, bool force_bemf, bool en_dis_6_step_comm)
 {
   observers::BemfOutput output;
 
-  math::frame_alpha_beta currents = math::clarke_transform(line_currents);
-  math::frame_alpha_beta voltages;
+  math::FrameAlphaBeta currents = math::clarke_transform(line_currents);
+  math::FrameAlphaBeta voltages;
   if(idle_mode)
     voltages = math::clarke_transform(line_voltages);
   else {
@@ -21,7 +21,7 @@ observers::BemfOutput observers::BemfObserver::loop(math::frame_abc line_current
     Vbus_prev = Vbus;
 
     // Duty Correction
-    math::frame_abc duty_corrected;
+    math::FrameABC duty_corrected;
     float duty_average = (duties.a + duties.b + duties.c) / 3;
     duty_corrected.a = duties.a - duty_average;
     duty_corrected.b = duties.b - duty_average;
@@ -94,7 +94,7 @@ observers::BemfOutput observers::BemfObserver::loop(math::frame_abc line_current
       return angle_deg;
   }();
 
-  //Bemf Stablility SMD
+  //Bemf Stability SMD
   if(pos_obs_mode == 2) {
 
   }

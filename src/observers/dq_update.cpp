@@ -5,14 +5,14 @@ observers::BemfSolver::BemfSolver() : I_prev(0, 0), X_prev(0, 0), E(0, 0)
 {
 }
 
-float observers::BemfSolver::loop(math::frame_alpha_beta currents, math::frame_alpha_beta voltages, const controllers::PIConfig& config, 
-                                    const BemfGains& gains, float angular_velocity, float rotor_angle, 
+float observers::BemfSolver::loop(math::FrameAlphaBeta currents, math::FrameAlphaBeta voltages, const controllers::PIConfig& config,
+                                    const BemfGains& gains, float angular_velocity, float rotor_angle,
                                     const SetBemfParams& set_params, const ExtBemfParams& ext_params)
 {
-  math::frame_dq I_est, error, X;
+  math::FrameDQ I_est, error, X;
 
-  math::frame_dq I = math::park_transform(currents, rotor_angle);
-  math::frame_dq V = math::park_transform(voltages, rotor_angle);
+  math::FrameDQ I = math::park_transform(currents, rotor_angle);
+  math::FrameDQ V = math::park_transform(voltages, rotor_angle);
 
   X.d = gains.VOLTAGE_GAIN * V.d + gains.SPEED_CURRENT_GAIN * I.q * angular_velocity + gains.EMF_GAIN * E.d;
   X.q = gains.VOLTAGE_GAIN * V.q + gains.SPEED_CURRENT_GAIN * I.d * angular_velocity + gains.EMF_GAIN * E.q;
@@ -42,7 +42,7 @@ float observers::BemfSolver::loop(math::frame_alpha_beta currents, math::frame_a
   return math::atan2(E.d, E.q);
 }
 
-math::frame_dq observers::BemfSolver::get_emfs() const
+math::FrameDQ observers::BemfSolver::get_emfs() const
 {
   return E;
 }

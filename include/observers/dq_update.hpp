@@ -48,14 +48,14 @@ struct BemfGains
 
 class BemfSolver
 {
-  math::frame_dq I_prev, X_prev, E;
+  math::FrameDQ I_prev, X_prev, E;
   controllers::PIController d_axis, q_axis;
 
 public:
   BemfSolver();
-  float loop(math::frame_alpha_beta currents, math::frame_alpha_beta voltages, const controllers::PIConfig& config, 
+  float loop(math::FrameAlphaBeta currents, math::FrameAlphaBeta voltages, const controllers::PIConfig& config,
               const BemfGains& gains, float angular_velocity, float rotor_angle,
               const SetBemfParams& set_params = SetBemfParams(), const ExtBemfParams& ext_params = ExtBemfParams());
-  math::frame_dq get_emfs() const;
+  math::FrameDQ get_emfs() const;
 };
 }  // namespace observers

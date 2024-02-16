@@ -2,39 +2,39 @@
 
 namespace math
 {
-struct frame_abc
+struct FrameABC
 {
   float a, b, c;
-  frame_abc() = default;
-  frame_abc(float a, float b, float c) : a(a), b(b), c(c)
+  FrameABC() = default;
+  FrameABC(float a, float b, float c) : a(a), b(b), c(c)
   {
   }
 };
 
-struct frame_alpha_beta
+struct FrameAlphaBeta
 {
   float alpha, beta;
-  frame_alpha_beta() = default;
-  frame_alpha_beta(float alpha, float beta) : alpha(alpha), beta(beta)
+  FrameAlphaBeta() = default;
+  FrameAlphaBeta(float alpha, float beta) : alpha(alpha), beta(beta)
   {
   }
 };
 
-struct frame_dq
+struct FrameDQ
 {
   float d, q;
-  frame_dq() = default;
-  frame_dq(float d, float q) : d(d), q(q)
+  FrameDQ() = default;
+  FrameDQ(float d, float q) : d(d), q(q)
   {
   }
 };
 
-frame_alpha_beta clarke_transform(frame_abc X);
+FrameAlphaBeta clarke_transform(FrameABC X);
 
-frame_dq park_transform(frame_alpha_beta X, float angle);
+FrameDQ park_transform(FrameAlphaBeta X, float angle);
 
-frame_abc inverse_clarke_transform(frame_alpha_beta X);
+FrameABC inverse_clarke_transform(FrameAlphaBeta X);
 
-frame_alpha_beta inverse_park_transform(frame_dq X, float angle);
+FrameAlphaBeta inverse_park_transform(FrameDQ X, float angle);
 
 }  // namespace math

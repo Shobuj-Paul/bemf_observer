@@ -20,16 +20,15 @@ struct ExtTrackerParams
   ExtTrackerParams(float error, float speed, float etheta) : error(error), speed(speed), etheta(etheta) {}
 };
 
-class position_tracker
+class Tracker
 {
-  float speed_est, angle_est, Ts;
+  float speed_est, angle_est;
   controllers::PIController angle_controller;
-  controllers::PIConfig tracker_config;
   math::integrator angle_integrator;
 
 public:
-  position_tracker(controllers::PIConfig config, float Ts);
-  float loop(float phase_error, const SetTrackerParams& params = SetTrackerParams(), const ExtTrackerParams& ext_params = ExtTrackerParams());
-  float speed_tracker(float angle_est);
+  Tracker() = default;
+  float loop(float phase_error, controllers::PIConfig config, const SetTrackerParams& params = SetTrackerParams(), const ExtTrackerParams& ext_params = ExtTrackerParams());
+  float speed_tracker(float angle_est, float Ts);
 };
 }  // namespace observers

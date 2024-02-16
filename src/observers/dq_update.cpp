@@ -1,27 +1,18 @@
 #include <observers/dq_update.hpp>
 #include <math/functions.hpp>
 
-observers::bemf_solver::bemf_solver(const controllers::PIConfig& config, const BemfGains& gains, float Ts)
-  : angular_velocity(0)
-  , rotor_angle(0)
-  , Ts(Ts)
-  , V(0, 0)
-  , E(0, 0)
-  , I_prev(0, 0)
-  , X_prev(0, 0)
-  , gains(gains)
-  , update_config(config)
+observers::BemfSolver::BemfSolver() : I_prev(0, 0), X_prev(0, 0), E(0, 0)
 {
 }
 
-float observers::bemf_solver::loop(math::frame_abc line_currents, math::frame_abc line_voltages, float angular_velocity,
-                                   float rotor_angle, const SetBemfParams& set_params, const ExtBemfParams& ext_params)
+float observers::BemfSolver::loop(math::frame_alpha_beta currents, math::frame_alpha_beta voltages, const controllers::PIConfig& config, 
+                                    const BemfGains& gains, float angular_velocity, float rotor_angle, 
+                                    const SetBemfParams& set_params, const ExtBemfParams& ext_params)
 {
-  math::frame_dq I_est;
-  math::frame_dq error;
+  math::frame_dq I_est, error, X;
 
-  I = math::park_transform(math::clarke_transform(line_currents), rotor_angle);
-  V = math::park_transform(math::clarke_transform(line_voltages), rotor_angle);
+  math::frame_dq I = math::park_transform(currents, rotor_angle);
+  math::frame_dq V = math::park_transform(voltages, rotor_angle);
 
   X.d = gains.VOLTAGE_GAIN * V.d + gains.SPEED_CURRENT_GAIN * I.q * angular_velocity + gains.EMF_GAIN * E.d;
   X.q = gains.VOLTAGE_GAIN * V.q + gains.SPEED_CURRENT_GAIN * I.d * angular_velocity + gains.EMF_GAIN * E.q;
@@ -42,11 +33,16 @@ float observers::bemf_solver::loop(math::frame_abc line_currents, math::frame_ab
   if(set_params.error_q)
     error.q = ext_params.error_q;
 
-  E.d = q_axis.loop(error.d, update_config, set_params.error_sum_d, ext_params.error_sum_d);
-  E.q = d_axis.loop(error.q, update_config, set_params.error_sum_q, ext_params.error_sum_q);
+  E.d = q_axis.loop(error.d, config, set_params.error_sum_d, ext_params.error_sum_d);
+  E.q = d_axis.loop(error.q, config, set_params.error_sum_q, ext_params.error_sum_q);
 
   X_prev = X;
   I_prev = I_est;
 
   return math::atan2(E.d, E.q);
+}
+
+math::frame_dq observers::BemfSolver::get_emfs() const
+{
+  return E;
 }

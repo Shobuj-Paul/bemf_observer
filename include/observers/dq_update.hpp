@@ -46,16 +46,16 @@ struct BemfGains
   }
 };
 
-class bemf_solver
+class BemfSolver
 {
-  float angular_velocity, rotor_angle, Ts;
-  math::frame_dq I, V, X, E, I_prev, X_prev;
-  const BemfGains& gains;
-  controllers::PIConfig update_config;
+  math::frame_dq I_prev, X_prev, E;
   controllers::PIController d_axis, q_axis;
 
 public:
-  bemf_solver(const controllers::PIConfig& config, const BemfGains& gains, float Ts);
-  float loop(math::frame_abc line_currents, math::frame_abc line_voltages, float angular_velocity, float rotor_angle, const SetBemfParams& set_params = SetBemfParams(), const ExtBemfParams& ext_params = ExtBemfParams());
+  BemfSolver();
+  float loop(math::frame_alpha_beta currents, math::frame_alpha_beta voltages, const controllers::PIConfig& config, 
+              const BemfGains& gains, float angular_velocity, float rotor_angle,
+              const SetBemfParams& set_params = SetBemfParams(), const ExtBemfParams& ext_params = ExtBemfParams());
+  math::frame_dq get_emfs() const;
 };
 }  // namespace observers

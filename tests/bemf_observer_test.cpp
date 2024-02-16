@@ -21,10 +21,13 @@ int main()
   uint8_t pos_obs_mode = 2, idle_mode = 0, opmode = 3, num_rotor_poles = 8, freq_mode = 2;
   bool force_bemf = false, en_dis_6_step_comm = false;
 
-  for(float t = 0; t < 10; t += Ts)
+  for (float t = 0; t < 10; t += Ts)
   {
     math::FrameABC duties = math::inverse_clarke_transform(math::inverse_park_transform(U, angle));
-    observers::BemfOutput output = bemf_observer.loop(line_currents, line_voltages, duties, Vbus, Ts, set_bemf_params, set_tracker_params, ext_bemf_params, ext_tracker_params, pos_obs_mode, idle_mode, opmode, num_rotor_poles, freq_mode, force_bemf, en_dis_6_step_comm);
+    observers::BemfOutput output =
+        bemf_observer.loop(line_currents, line_voltages, duties, Vbus, Ts, set_bemf_params, set_tracker_params,
+                           ext_bemf_params, ext_tracker_params, pos_obs_mode, idle_mode, opmode, num_rotor_poles,
+                           freq_mode, force_bemf, en_dis_6_step_comm);
     angle = output.e_theta_deg;
     std::cout << "Duties: " << duties.a << " " << duties.b << " " << duties.c << std::endl;
   }

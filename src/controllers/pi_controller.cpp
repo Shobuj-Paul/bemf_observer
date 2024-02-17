@@ -14,16 +14,6 @@ float controllers::PIController::clamp(float input, float upper_limit, float low
     return input;
 }
 
-float controllers::PIController::reset(float input, float output, float upper_limit, float lower_limit)
-{
-  if (input > 0 && output >= upper_limit)
-    return 0;
-  else if (input < 0 && output <= lower_limit)
-    return 0;
-  else
-    return input;
-}
-
 float controllers::PIController::loop(float error, const PIConfig& config, float external_integral, bool reset_integral)
 {
   if (error > 0 && output >= config.upper_limit)

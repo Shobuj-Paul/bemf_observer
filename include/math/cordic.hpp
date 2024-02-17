@@ -4,10 +4,10 @@
 
 namespace CORDIC
 {
-  struct Trig
-  {
-    int sin;
-    int cos;
-  };
-  Trig trig(int angle);
-}
+struct Trig
+{
+  int sin;
+  int cos;
+};
+Trig trig(int angle);
+}  // namespace CORDIC

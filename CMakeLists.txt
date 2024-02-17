@@ -19,6 +19,7 @@ add_library(${PROJECT_NAME}
     src/math/functions.cpp
     src/math/foc.cpp
     src/math/operators.cpp
+    src/math/cordic.cpp
     src/observers/tracker.cpp
     src/observers/dq_update.cpp
     src/observers/bemf_observer.cpp
@@ -40,6 +41,10 @@ add_test(NAME dq_update_test COMMAND "${CMAKE_SOURCE_DIR}/bin/dq_update_test")
 add_executable(tracker_test tests/tracker_test.cpp)
 target_link_libraries(tracker_test ${PROJECT_NAME})
 add_test(NAME tracker_test COMMAND "${CMAKE_SOURCE_DIR}/bin/tracker_test")
+
+add_executable(cordic_algo_test tests/cordic_algo_test.cpp)
+target_link_libraries(cordic_algo_test ${PROJECT_NAME})
+add_test(NAME cordic_algo_test COMMAND "${CMAKE_SOURCE_DIR}/bin/cordic_algo_test" 45)
 
 # Include Header files
 include_directories(

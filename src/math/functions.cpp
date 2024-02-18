@@ -32,7 +32,11 @@ float math::sin(float angle)
     angle = PI - angle;
   else if (angle < -PI / 2)
     angle = -PI - angle;
-  return (angle - pow(angle, 3) / 6 + pow(angle, 5) / 120 - pow(angle, 7) / 5040);
+  float pow_2 = angle * angle;
+  float pow_3 = pow_2 * angle;
+  float pow_5 = pow_3 * pow_2;
+  float pow_7 = pow_5 * pow_2;
+  return (angle - pow_3 * 0.1667 + pow_5 * 0.008333 - pow_7 * 0.0001984);
 }
 
 float math::cos(float angle)

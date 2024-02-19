@@ -1,4 +1,5 @@
 #include <math/cordic.hpp>
+#include <iostream>
 
 CORDIC::Trig CORDIC::trig(int angle)
 {
@@ -8,6 +9,7 @@ CORDIC::Trig CORDIC::trig(int angle)
   {
     sigma = (theta < angle) ? 1 : -1;
     theta = theta + sigma * atan2[i];
+    if (theta == angle) break;
     nx = x - sigma * (y >> i);
     y = y + sigma * (x >> i);
     x = nx;

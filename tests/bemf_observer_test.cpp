@@ -25,7 +25,7 @@ int main()
   {
     math::FrameABC duties = math::inverse_clarke_transform(math::inverse_park_transform(U, angle));
     observers::BemfOutput output =
-        bemf_observer.loop(line_currents, line_voltages, duties, Vbus, Ts, set_bemf_params, set_tracker_params,
+        bemf_observer.loop(line_currents, line_voltages, duties, Vbus, set_bemf_params, set_tracker_params,
                            ext_bemf_params, ext_tracker_params, pos_obs_mode, idle_mode, opmode, num_rotor_poles,
                            freq_mode, force_bemf, en_dis_6_step_comm);
     angle = output.e_theta_deg;

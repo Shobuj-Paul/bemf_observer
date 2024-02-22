@@ -1,17 +1,17 @@
 #include <observers/bemf_observer.hpp>
 
-observers::BemfObserver::BemfObserver() : speed_prev(0), angle_prev(0)
+observers::BemfObserver::BemfObserver(const float Ts) : speed_prev(0), angle_prev(0), Ts(Ts)
 {
 }
 
-observers::BemfOutput observers::BemfObserver::loop(math::FrameABC line_currents, math::FrameABC line_voltages,
-                                                    math::FrameABC duties, float Vbus, const float Ts,
+observers::BemfOutput observers::BemfObserver::loop(const math::FrameABC& line_currents, const math::FrameABC& line_voltages,
+                                                    const math::FrameABC& duties, float Vbus,
                                                     const SetBemfParams& set_bemf_params,
                                                     const SetTrackerParams& set_tracker_params,
                                                     const ExtBemfParams& ext_bemf_params,
-                                                    const ExtTrackerParams& ext_tracker_params, uint8_t pos_obs_mode,
-                                                    uint8_t idle_mode, uint8_t opmode, const uint8_t num_rotor_poles,
-                                                    const uint8_t freq_mode, bool force_bemf, bool en_dis_6_step_comm)
+                                                    const ExtTrackerParams& ext_tracker_params, const uint8_t pos_obs_mode,
+                                                    const uint8_t idle_mode, const uint8_t opmode, const uint8_t num_rotor_poles,
+                                                    const uint8_t freq_mode, const bool force_bemf, const bool en_dis_6_step_comm)
 {
   observers::BemfOutput output;
 
@@ -39,11 +39,11 @@ observers::BemfOutput observers::BemfObserver::loop(math::FrameABC line_currents
   }
 
   dq_update.gains = observers::BemfGains(0.0001, 0.0001, 0.1, Ts, 0);
-  dq_update.config = [freq_mode, opmode, Ts]() {
+  dq_update.config = [freq_mode, opmode, this]() {
     controllers::PIConfig config = { 0.1, 0.1, Ts, -180, 180 };
     return config;
   }();
-  tracker.config = [freq_mode, opmode, Ts]() {
+  tracker.config = [freq_mode, opmode, this]() {
     controllers::PIConfig config = { 0.1, 0.1, Ts, -180, 180 };
     return config;
   }();
@@ -64,7 +64,7 @@ observers::BemfOutput observers::BemfObserver::loop(math::FrameABC line_currents
       return speed * alpha + (1 - alpha) * speed_prev;
   }();
   output.m_speed_rpm = angular_velocity * 30 / (PI * num_rotor_poles / 2);
-  output.e_theta_deg = [angular_velocity, angle, Ts, this]() -> float {
+  output.e_theta_deg = [angular_velocity, angle, this]() -> float {
     float e_theta_deg = (angular_velocity * Ts + angle) * 180 / PI;
     if (e_theta_deg > 180)
       e_theta_deg -= 360;

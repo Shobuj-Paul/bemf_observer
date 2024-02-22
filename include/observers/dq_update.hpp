@@ -71,10 +71,11 @@ class DQUpdate
   controllers::PIController d_axis, q_axis;
 
 public:
-  DQUpdate();
   controllers::PIConfig config;
   BemfGains gains;
 
+  DQUpdate();
+  DQUpdate(controllers::PIConfig config, BemfGains gains);
   float loop(math::FrameAlphaBeta currents, math::FrameAlphaBeta voltages, float angular_velocity, float rotor_angle,
              const SetBemfParams& set_params = SetBemfParams(), const ExtBemfParams& ext_params = ExtBemfParams());
   math::FrameDQ get_emfs() const;

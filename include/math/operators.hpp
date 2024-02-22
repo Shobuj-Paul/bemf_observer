@@ -16,7 +16,7 @@ class integrator
   float output, input_prev, Ts;
 
 public:
-  integrator();
+  integrator(float initial_value = 0);
   float loop(float input, float Ts);
 };
 

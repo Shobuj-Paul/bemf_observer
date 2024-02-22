@@ -36,7 +36,9 @@ class Tracker
 
 public:
   controllers::PIConfig config;
+
   Tracker() = default;
+  Tracker(controllers::PIConfig config);
   float loop(float phase_error, const SetTrackerParams& params = SetTrackerParams(),
              const ExtTrackerParams& ext_params = ExtTrackerParams());
   float speed_tracker(float angle_est, float Ts);

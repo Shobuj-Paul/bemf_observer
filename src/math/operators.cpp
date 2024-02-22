@@ -11,7 +11,7 @@ float math::differentiator::loop(float input, float Ts)
   return output;
 }
 
-math::integrator::integrator() : output(0), input_prev(0)
+math::integrator::integrator(float initial_value) : output(0), input_prev(initial_value)
 {
 }
 

@@ -5,6 +5,10 @@ observers::DQUpdate::DQUpdate() : I_prev(0, 0), X_prev(0, 0), E(0, 0)
 {
 }
 
+observers::DQUpdate::DQUpdate(controllers::PIConfig config, BemfGains gains) : I_prev(0, 0), X_prev(0, 0), E(0, 0), config(config), gains(gains)
+{
+}
+
 float observers::DQUpdate::loop(math::FrameAlphaBeta currents, math::FrameAlphaBeta voltages, float angular_velocity,
                                   float rotor_angle, const SetBemfParams& set_params, const ExtBemfParams& ext_params)
 {

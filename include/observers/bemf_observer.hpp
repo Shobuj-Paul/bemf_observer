@@ -15,7 +15,7 @@ struct BemfOutput
 
 class BemfObserver
 {
-  BemfSolver dq_update;
+  DQUpdate dq_update;
   Tracker tracker;
   float speed_prev, angle_prev, Vbus_prev;
 

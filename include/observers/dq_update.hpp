@@ -43,7 +43,7 @@ struct ExtBemfParams
 struct BemfGains
 {
   float VOLTAGE_GAIN, CURRENT_GAIN, EMF_GAIN, SPEED_CURRENT_GAIN;
-  BemfGains(float Ld, float Lq, float Rs, float Ts, int axis)
+  BemfGains(float Ld, float Lq, float Rs, float Ts, bool axis)
   {
     if (axis == 0)
     {
@@ -52,7 +52,7 @@ struct BemfGains
       EMF_GAIN = Ts / (2 * Ld + Rs * Ts);
       SPEED_CURRENT_GAIN = (2 * Ld - Rs * Ts) / (2 * Ld + Rs * Ts);
     }
-    if (axis == 1)
+    else if (axis == 1)
     {
       VOLTAGE_GAIN = Ts / (2 * Lq + Rs * Ts);
       CURRENT_GAIN = -Ld * Ts / (2 * Lq + Rs * Ts);
@@ -60,17 +60,22 @@ struct BemfGains
       SPEED_CURRENT_GAIN = (2 * Lq - Rs * Ts) / (2 * Lq + Rs * Ts);
     }
   }
+  BemfGains() : VOLTAGE_GAIN(0), CURRENT_GAIN(0), EMF_GAIN(0), SPEED_CURRENT_GAIN(0)
+  {
+  }
 };
 
-class BemfSolver
+class DQUpdate
 {
   math::FrameDQ I_prev, X_prev, E;
   controllers::PIController d_axis, q_axis;
 
 public:
-  BemfSolver();
-  float loop(math::FrameAlphaBeta currents, math::FrameAlphaBeta voltages, const controllers::PIConfig& config,
-             const BemfGains& gains, float angular_velocity, float rotor_angle,
+  DQUpdate();
+  controllers::PIConfig config;
+  BemfGains gains;
+
+  float loop(math::FrameAlphaBeta currents, math::FrameAlphaBeta voltages, float angular_velocity, float rotor_angle,
              const SetBemfParams& set_params = SetBemfParams(), const ExtBemfParams& ext_params = ExtBemfParams());
   math::FrameDQ get_emfs() const;
 };

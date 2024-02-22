@@ -35,8 +35,9 @@ class Tracker
   math::integrator angle_integrator;
 
 public:
+  controllers::PIConfig config;
   Tracker() = default;
-  float loop(float phase_error, controllers::PIConfig config, const SetTrackerParams& params = SetTrackerParams(),
+  float loop(float phase_error, const SetTrackerParams& params = SetTrackerParams(),
              const ExtTrackerParams& ext_params = ExtTrackerParams());
   float speed_tracker(float angle_est, float Ts);
 };

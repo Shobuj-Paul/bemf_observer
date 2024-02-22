@@ -38,19 +38,19 @@ observers::BemfOutput observers::BemfObserver::loop(math::FrameABC line_currents
     voltages.beta = voltages.beta * Vbus;
   }
 
-  const observers::BemfGains bemf_gains(0.0001, 0.0001, 0.1, Ts, 0);
-  const controllers::PIConfig update_config = [freq_mode, opmode, Ts]() {
+  dq_update.gains = observers::BemfGains(0.0001, 0.0001, 0.1, Ts, 0);
+  dq_update.config = [freq_mode, opmode, Ts]() {
     controllers::PIConfig config = { 0.1, 0.1, Ts, -180, 180 };
     return config;
   }();
-  const controllers::PIConfig track_config = [freq_mode, opmode, Ts]() {
+  tracker.config = [freq_mode, opmode, Ts]() {
     controllers::PIConfig config = { 0.1, 0.1, Ts, -180, 180 };
     return config;
   }();
 
-  float phase_error = dq_update.loop(currents, voltages, update_config, bemf_gains, speed_prev, angle_prev,
+  float phase_error = dq_update.loop(currents, voltages, speed_prev, angle_prev,
                                      set_bemf_params, ext_bemf_params);
-  float angle = tracker.loop(phase_error, track_config, set_tracker_params, ext_tracker_params);
+  float angle = tracker.loop(phase_error, set_tracker_params, ext_tracker_params);
   float speed = tracker.speed_tracker(angle, Ts);
 
   // Process Tracker Output

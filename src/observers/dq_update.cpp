@@ -1,12 +1,11 @@
 #include <observers/dq_update.hpp>
 #include <math/functions.hpp>
 
-observers::BemfSolver::BemfSolver() : I_prev(0, 0), X_prev(0, 0), E(0, 0)
+observers::DQUpdate::DQUpdate() : I_prev(0, 0), X_prev(0, 0), E(0, 0)
 {
 }
 
-float observers::BemfSolver::loop(math::FrameAlphaBeta currents, math::FrameAlphaBeta voltages,
-                                  const controllers::PIConfig& config, const BemfGains& gains, float angular_velocity,
+float observers::DQUpdate::loop(math::FrameAlphaBeta currents, math::FrameAlphaBeta voltages, float angular_velocity,
                                   float rotor_angle, const SetBemfParams& set_params, const ExtBemfParams& ext_params)
 {
   math::FrameDQ I_est, error, X;
@@ -42,7 +41,7 @@ float observers::BemfSolver::loop(math::FrameAlphaBeta currents, math::FrameAlph
   return math::atan2(E.d, E.q);
 }
 
-math::FrameDQ observers::BemfSolver::get_emfs() const
+math::FrameDQ observers::DQUpdate::get_emfs() const
 {
   return E;
 }

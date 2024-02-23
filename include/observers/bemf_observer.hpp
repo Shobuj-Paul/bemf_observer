@@ -28,8 +28,8 @@ public:
                   const SetBemfParams& set_bemf_params,
                   const SetTrackerParams& set_tracker_params,
                   const ExtBemfParams& ext_bemf_params,
-                  const ExtTrackerParams& ext_tracker_params, const uint8_t pos_obs_mode,
-                  const uint8_t idle_mode, const uint8_t opmode, const uint8_t num_rotor_poles,
-                  const uint8_t freq_mode, const bool force_bemf, const bool en_dis_6_step_comm);
+                  const ExtTrackerParams& ext_tracker_params,
+                  const uint8_t idle_mode, const uint8_t num_rotor_poles,
+                  const bool force_bemf, const bool en_dis_6_step_comm);
 };
 }  // namespace observers

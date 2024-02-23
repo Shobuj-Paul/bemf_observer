@@ -9,9 +9,9 @@ observers::BemfOutput observers::BemfObserver::loop(const math::FrameABC& line_c
                                                     const SetBemfParams& set_bemf_params,
                                                     const SetTrackerParams& set_tracker_params,
                                                     const ExtBemfParams& ext_bemf_params,
-                                                    const ExtTrackerParams& ext_tracker_params, const uint8_t pos_obs_mode,
-                                                    const uint8_t idle_mode, const uint8_t opmode, const uint8_t num_rotor_poles,
-                                                    const uint8_t freq_mode, const bool force_bemf, const bool en_dis_6_step_comm)
+                                                    const ExtTrackerParams& ext_tracker_params,
+                                                    const uint8_t idle_mode, const uint8_t num_rotor_poles,
+                                                    const bool force_bemf, const bool en_dis_6_step_comm)
 {
   observers::BemfOutput output;
 
@@ -39,11 +39,11 @@ observers::BemfOutput observers::BemfObserver::loop(const math::FrameABC& line_c
   }
 
   dq_update.gains = observers::BemfGains(0.0001, 0.0001, 0.1, Ts, 0);
-  dq_update.config = [freq_mode, opmode, this]() {
+  dq_update.config = [this]() {
     controllers::PIConfig config = { 0.1, 0.1, Ts, -180, 180 };
     return config;
   }();
-  tracker.config = [freq_mode, opmode, this]() {
+  tracker.config = [this]() {
     controllers::PIConfig config = { 0.1, 0.1, Ts, -180, 180 };
     return config;
   }();
@@ -100,7 +100,6 @@ observers::BemfOutput observers::BemfObserver::loop(const math::FrameABC& line_c
   }();
 
   // Bemf Stability SMD
-  if (pos_obs_mode == 2) {}
   if (idle_mode) {}
   if (force_bemf) {}
 

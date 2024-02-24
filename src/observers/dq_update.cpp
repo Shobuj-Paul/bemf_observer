@@ -3,14 +3,19 @@
 
 observers::DQUpdate::DQUpdate() : I_prev(0, 0), X_prev(0, 0), E(0, 0)
 {
+  d_axis = std::make_unique<controllers::PIController>();
+  q_axis = std::make_unique<controllers::PIController>();
 }
 
-observers::DQUpdate::DQUpdate(controllers::PIConfig config, BemfGains gains) : I_prev(0, 0), X_prev(0, 0), E(0, 0), config(config), gains(gains)
+observers::DQUpdate::DQUpdate(controllers::PIConfig config, BemfGains gains)
+  : I_prev(0, 0), X_prev(0, 0), E(0, 0), config(config), gains(gains)
 {
+  d_axis = std::make_unique<controllers::PIController>();
+  q_axis = std::make_unique<controllers::PIController>();
 }
 
 float observers::DQUpdate::loop(math::FrameAlphaBeta currents, math::FrameAlphaBeta voltages, float angular_velocity,
-                                  float rotor_angle, const SetBemfParams& set_params, const ExtBemfParams& ext_params)
+                                float rotor_angle, const SetBemfParams& set_params, const ExtBemfParams& ext_params)
 {
   math::FrameDQ I_est, error, X;
 
@@ -36,8 +41,8 @@ float observers::DQUpdate::loop(math::FrameAlphaBeta currents, math::FrameAlphaB
   if (set_params.error_q)
     error.q = ext_params.error_q;
 
-  E.d = q_axis.loop(error.d, config, set_params.error_sum_d, ext_params.error_sum_d);
-  E.q = d_axis.loop(error.q, config, set_params.error_sum_q, ext_params.error_sum_q);
+  E.d = q_axis->loop(error.d, config, set_params.error_sum_d, ext_params.error_sum_d);
+  E.q = d_axis->loop(error.q, config, set_params.error_sum_q, ext_params.error_sum_q);
 
   X_prev = X;
   I_prev = I_est;

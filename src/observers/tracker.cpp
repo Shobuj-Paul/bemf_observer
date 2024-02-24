@@ -1,11 +1,10 @@
 #include <observers/tracker.hpp>
 
-float observers::Tracker::loop(float phase_error, const SetTrackerParams& set_params,
-                               const ExtTrackerParams& ext_params)
+float observers::Tracker::loop(float phase_error, const SetTrackerParams& set_params, const ExtTrackerParams& ext_params)
 {
   if (set_params.error)
     phase_error = ext_params.error;
-  angle_est += config.Ts * angle_controller.loop(phase_error, config, set_params.speed, ext_params.speed);
+  angle_est += config.Ts * angle_controller->loop(phase_error, config, set_params.speed, ext_params.speed);
   if (set_params.etheta)
     angle_est = ext_params.etheta;
   angle_est = math::wrapAngle(angle_est);
@@ -14,9 +13,11 @@ float observers::Tracker::loop(float phase_error, const SetTrackerParams& set_pa
 
 observers::Tracker::Tracker(controllers::PIConfig config) : config(config)
 {
+  angle_controller = std::make_unique<controllers::PIController>();
+  angle_integrator = std::make_unique<math::integrator>();
 }
 
 float observers::Tracker::speed_tracker(float angle_est, float Ts)
 {
-  return angle_integrator.loop(angle_est, Ts);
+  return angle_integrator->loop(angle_est, Ts);
 }

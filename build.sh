@@ -8,7 +8,13 @@ PROJECT_DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
 
 # Path to the build directory.
 BUILD_DIR=${PROJECT_DIR}/build
-BIN_DIR=${PROJECT_DIR}/bin
+if [ -d "$BUILD_DIR" ]; then
+    echo "Build directory exists."
+else
+    echo "Build directory does not exist."
+    echo "Creating build directory..."
+    mkdir -p ${BUILD_DIR}
+fi
 
 # Check if --clean flag is passed
 for arg in "$@"
@@ -20,28 +26,43 @@ do
             rm -rf ${BIN_DIR}
             exit 0
             ;;
+        --show-failed)
+            SHOW_FAILED=1
+            ;;
+        --debug)
+            DEBUG=1
+            ;;
+        --release)
+            RELEASE=1
+            ;;
     esac
 done
 
-# Path to the build directory.
-BUILD_DIR=${PROJECT_DIR}/build
-if [ -d "$BUILD_DIR" ]; then
-    echo "Build directory exists."
-else
-    echo "Build directory does not exist."
-    echo "Creating build directory..."
-    mkdir -p ${BUILD_DIR}
-fi
-cd ${BUILD_DIR}
-
 # Configure and build the project.
-cmake ..
-make -j4
+cd ${BUILD_DIR}
+if [ -z "$DEBUG" ]; then
+  cmake .. -DCMAKE_BUILD_TYPE=Debug ..
+  make -j4
+elif [ -z "$RELEASE" ]; then
+  cmake .. -DCMAKE_BUILD_TYPE=Release ..
+  make -j4
+else
+  cmake ..
+  make -j4
+fi
 
 # If make completes successfully, run ctest
 if [ $? -eq 0 ]; then
   cd ${BUILD_DIR}
-  ctest -C Release
+  if [ -z "$SHOW_FAILED" ]; then
+    ctest -C Debug --rerun-failed --output-on-failure
+  elif [ -z "$DEBUG" ]; then
+    ctest -C Debug --output-on-failure
+  elif [ -z "$RELEASE" ]; then
+    ctest -C Release
+  else
+    ctest
+  fi
 else
   echo -e "\nMake failed, so ctest will not be run."
 fi

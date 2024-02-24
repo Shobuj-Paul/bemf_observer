@@ -6,8 +6,7 @@ namespace CORDIC
 {
 struct Trig
 {
-  int sin;
-  int cos;
+  int cos, sin;
 };
-Trig trig(int angle);
+Trig trig(int32_t angle);
 }  // namespace CORDIC

@@ -14,9 +14,15 @@ int main()
   for (float t = 0; t < 10; t += Ts)
   {
     float error = x_ref - x_meas;
-    if (math::abs(error) < 0.1 && t > 5)
+    if (math::abs(error) < 0.01 && t > 5)
       break;
     x_meas += Ts * controller.loop(error, config);
     std::cout << "t = " << t << " x = " << x_meas << std::endl;
   }
+  if (math::abs(x_meas - x_ref) > 0.01)
+  {
+    std::cerr << "Steady state error exceeded" << std::endl;
+    return 1;
+  }
+  return 0;
 }

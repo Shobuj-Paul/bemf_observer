@@ -1,16 +1,18 @@
 #include <observers/bemf_observer.hpp>
 
-observers::BemfObserver::BemfObserver(const float Ts) : speed_prev(0), angle_prev(0), Ts(Ts)
+observers::BemfObserver::BemfObserver(const float Ts, const uint8_t num_rotor_poles)
+  : speed_prev(0), angle_prev(0), Vbus_prev(0), num_rotor_poles(num_rotor_poles), Ts(Ts)
 {
+  tracker = std::make_unique<observers::Tracker>(controllers::PIConfig());
+  dq_update = std::make_unique<observers::DQUpdate>();
 }
 
-observers::BemfOutput observers::BemfObserver::loop(const math::FrameABC& line_currents, const math::FrameABC& line_voltages,
-                                                    const math::FrameABC& duties, float Vbus,
-                                                    const SetBemfParams& set_bemf_params,
+observers::BemfOutput observers::BemfObserver::loop(const math::FrameABC& line_currents,
+                                                    const math::FrameABC& line_voltages, const math::FrameABC& duties,
+                                                    float Vbus, const SetBemfParams& set_bemf_params,
                                                     const SetTrackerParams& set_tracker_params,
                                                     const ExtBemfParams& ext_bemf_params,
-                                                    const ExtTrackerParams& ext_tracker_params,
-                                                    const uint8_t idle_mode, const uint8_t num_rotor_poles,
+                                                    const ExtTrackerParams& ext_tracker_params, const uint8_t idle_mode,
                                                     const bool force_bemf, const bool en_dis_6_step_comm)
 {
   observers::BemfOutput output;
@@ -38,20 +40,19 @@ observers::BemfOutput observers::BemfObserver::loop(const math::FrameABC& line_c
     voltages.beta = voltages.beta * Vbus;
   }
 
-  dq_update.gains = observers::BemfGains(0.0001, 0.0001, 0.1, Ts, 0);
-  dq_update.config = [this]() {
+  dq_update->gains = observers::BemfGains(0.0001, 0.0001, 0.1, Ts, 0);
+  dq_update->config = [this]() {
     controllers::PIConfig config = { 0.1, 0.1, Ts, -180, 180 };
     return config;
   }();
-  tracker.config = [this]() {
+  tracker->config = [this]() {
     controllers::PIConfig config = { 0.1, 0.1, Ts, -180, 180 };
     return config;
   }();
 
-  float phase_error = dq_update.loop(currents, voltages, speed_prev, angle_prev,
-                                     set_bemf_params, ext_bemf_params);
-  float angle = tracker.loop(phase_error, set_tracker_params, ext_tracker_params);
-  float speed = tracker.speed_tracker(angle, Ts);
+  float phase_error = dq_update->loop(currents, voltages, speed_prev, angle_prev, set_bemf_params, ext_bemf_params);
+  float angle = tracker->loop(phase_error, set_tracker_params, ext_tracker_params);
+  float speed = tracker->speed_tracker(angle, Ts);
 
   // Process Tracker Output
   output.phase_error_rad = phase_error;

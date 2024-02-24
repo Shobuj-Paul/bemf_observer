@@ -16,20 +16,18 @@ struct BemfOutput
 class BemfObserver
 {
   float speed_prev, angle_prev, Vbus_prev;
+  const uint8_t num_rotor_poles;
 
 public:
-  DQUpdate dq_update;
-  Tracker tracker;
+  std::unique_ptr<DQUpdate> dq_update;
+  std::unique_ptr<Tracker> tracker;
   float Ts;
 
-  BemfObserver(const float Ts = 0);
+  BemfObserver(const float Ts = 0, const uint8_t num_rotor_poles = 0);
   BemfOutput loop(const math::FrameABC& line_currents, const math::FrameABC& line_voltages,
-                  const math::FrameABC& duties, float Vbus,
-                  const SetBemfParams& set_bemf_params,
-                  const SetTrackerParams& set_tracker_params,
-                  const ExtBemfParams& ext_bemf_params,
-                  const ExtTrackerParams& ext_tracker_params,
-                  const uint8_t idle_mode, const uint8_t num_rotor_poles,
-                  const bool force_bemf, const bool en_dis_6_step_comm);
+                  const math::FrameABC& duties, float Vbus, const SetBemfParams& set_bemf_params,
+                  const SetTrackerParams& set_tracker_params, const ExtBemfParams& ext_bemf_params,
+                  const ExtTrackerParams& ext_tracker_params, const uint8_t idle_mode, const bool force_bemf,
+                  const bool en_dis_6_step_comm);
 };
 }  // namespace observers

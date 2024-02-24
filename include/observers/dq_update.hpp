@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <math/foc.hpp>
 #include <controllers/pi_controller.hpp>
 
@@ -68,7 +69,7 @@ struct BemfGains
 class DQUpdate
 {
   math::FrameDQ I_prev, X_prev, E;
-  controllers::PIController d_axis, q_axis;
+  std::unique_ptr<controllers::PIController> d_axis, q_axis;
 
 public:
   controllers::PIConfig config;

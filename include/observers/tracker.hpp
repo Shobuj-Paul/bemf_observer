@@ -1,8 +1,9 @@
 #pragma once
 
-#include <controllers/pi_controller.hpp>
+#include <memory>
 #include <math/operators.hpp>
 #include <math/functions.hpp>
+#include <controllers/pi_controller.hpp>
 
 namespace observers
 {
@@ -31,8 +32,8 @@ struct ExtTrackerParams
 class Tracker
 {
   float speed_est, angle_est;
-  controllers::PIController angle_controller;
-  math::integrator angle_integrator;
+  std::unique_ptr<controllers::PIController> angle_controller;
+  std::unique_ptr<math::integrator> angle_integrator;
 
 public:
   controllers::PIConfig config;

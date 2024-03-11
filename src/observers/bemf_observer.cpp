@@ -7,7 +7,7 @@ observers::BemfObserver::BemfObserver(const float Ts, const uint8_t num_rotor_po
   dq_update = std::make_unique<observers::DQUpdate>();
 }
 
-observers::BemfOutput observers::BemfObserver::loop(const math::FrameABC& line_currents,
+float observers::BemfObserver::loop(const math::FrameABC& line_currents,
                                                     const math::FrameABC& line_voltages, const math::FrameABC& duties,
                                                     float Vbus, const SetBemfParams& set_bemf_params,
                                                     const SetTrackerParams& set_tracker_params,
@@ -15,8 +15,6 @@ observers::BemfOutput observers::BemfObserver::loop(const math::FrameABC& line_c
                                                     const ExtTrackerParams& ext_tracker_params, const uint8_t idle_mode,
                                                     const bool force_bemf, const bool en_dis_6_step_comm)
 {
-  observers::BemfOutput output;
-
   math::FrameAlphaBeta currents = math::clarke_transform(line_currents);
   math::FrameAlphaBeta voltages;
   if (idle_mode)
@@ -24,7 +22,8 @@ observers::BemfOutput observers::BemfObserver::loop(const math::FrameABC& line_c
   else
   {
     // Vbus Filter
-    Vbus = 0.01 * Vbus + 0.99 * Vbus_prev;
+    constexpr float alpha = 0.01;
+    Vbus = alpha * Vbus + (1-alpha) * Vbus_prev;
     Vbus_prev = Vbus;
 
     // Duty Correction
@@ -55,17 +54,17 @@ observers::BemfOutput observers::BemfObserver::loop(const math::FrameABC& line_c
   float speed = tracker->speed_tracker(angle, Ts);
 
   // Process Tracker Output
-  output.phase_error_rad = phase_error;
-  output.m_speed_rpm_raw = speed * 30 / (PI * num_rotor_poles / 2);
-  float angular_velocity = [speed, set_tracker_params, ext_tracker_params, this]() -> float {
+  this->phase_error_rad = phase_error;
+  this->m_speed_rpm_raw = speed * 30 / (PI * num_rotor_poles / 2);
+  float angular_velocity = [&set_tracker_params, &ext_tracker_params, speed, this]() -> float {
     constexpr float alpha = 0.01;
     if (set_tracker_params.speed)
       return set_tracker_params.speed;
     else
-      return speed * alpha + (1 - alpha) * speed_prev;
+      return speed * alpha + (1 - alpha) * speed_prev; // Speed FIR Filter
   }();
-  output.m_speed_rpm = angular_velocity * 30 / (PI * num_rotor_poles / 2);
-  output.e_theta_deg = [angular_velocity, angle, this]() -> float {
+  this->m_speed_rpm = angular_velocity * 30 / (PI * num_rotor_poles / 2);
+  this->e_theta_deg = [angular_velocity, angle, this]() -> float {
     float e_theta_deg = (angular_velocity * Ts + angle) * 180 / PI;
     if (e_theta_deg > 180)
       e_theta_deg -= 360;
@@ -77,7 +76,7 @@ observers::BemfOutput observers::BemfObserver::loop(const math::FrameABC& line_c
       e_theta_deg += 180;
     return e_theta_deg;
   }();
-  output.e_theta_deg_6_step = [angle, en_dis_6_step_comm]() -> float {
+  this->e_theta_deg_6_step = [angle, en_dis_6_step_comm]() -> float {
     float angle_deg = angle * 180 / PI;
     if (en_dis_6_step_comm)
     {
@@ -101,11 +100,50 @@ observers::BemfOutput observers::BemfObserver::loop(const math::FrameABC& line_c
   }();
 
   // Bemf Stability SMD
-  if (idle_mode) {}
   if (force_bemf) {}
 
   speed_prev = speed;
   angle_prev = angle;
 
-  return output;
+  return angle;
+}
+
+float observers::BemfObserver::get_m_speed_rpm() const
+{
+  return m_speed_rpm;
+}
+
+float observers::BemfObserver::get_m_speed_rpm_raw() const
+{
+  return m_speed_rpm_raw;
+}
+
+float observers::BemfObserver::get_phase_error_rad() const
+{
+  return phase_error_rad;
+}
+
+float observers::BemfObserver::get_e_theta_deg() const
+{
+  return e_theta_deg;
+}
+
+float observers::BemfObserver::get_e_theta_deg_6_step() const
+{
+  return e_theta_deg_6_step;
+}
+
+uint8_t observers::BemfObserver::get_stability_smd_state() const
+{
+  return stability_smd_state;
+}
+
+uint8_t observers::BemfObserver::get_bemf_stable() const
+{
+  return bemf_stable;
+}
+
+uint8_t observers::BemfObserver::get_bemf_stability_flag() const
+{
+  return bemf_stability_flag;
 }

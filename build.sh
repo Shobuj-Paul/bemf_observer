@@ -16,6 +16,9 @@ else
     mkdir -p ${BUILD_DIR}
 fi
 
+# Path to the bin directory.
+BIN_DIR=${PROJECT_DIR}/bin
+
 # Check if --clean flag is passed
 for arg in "$@"
 do

@@ -37,4 +37,6 @@ FrameABC inverse_clarke_transform(FrameAlphaBeta X);
 
 FrameAlphaBeta inverse_park_transform(FrameDQ X, float angle);
 
+FrameABC space_vector_modulation(FrameAlphaBeta U);
+
 }  // namespace math

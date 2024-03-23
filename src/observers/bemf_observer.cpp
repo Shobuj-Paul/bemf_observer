@@ -7,13 +7,11 @@ observers::BemfObserver::BemfObserver(const float Ts, const uint8_t num_rotor_po
   dq_update = std::make_unique<observers::DQUpdate>();
 }
 
-float observers::BemfObserver::loop(const math::FrameABC& line_currents,
-                                                    const math::FrameABC& line_voltages, const math::FrameABC& duties,
-                                                    float Vbus, const SetBemfParams& set_bemf_params,
-                                                    const SetTrackerParams& set_tracker_params,
-                                                    const ExtBemfParams& ext_bemf_params,
-                                                    const ExtTrackerParams& ext_tracker_params, const uint8_t idle_mode,
-                                                    const bool force_bemf, const bool en_dis_6_step_comm)
+float observers::BemfObserver::loop(const math::FrameABC& line_currents, const math::FrameABC& line_voltages,
+                                    const math::FrameABC& duties, float Vbus, const SetBemfParams& set_bemf_params,
+                                    const SetTrackerParams& set_tracker_params, const ExtBemfParams& ext_bemf_params,
+                                    const ExtTrackerParams& ext_tracker_params, const uint8_t idle_mode,
+                                    const bool force_bemf, const bool en_dis_6_step_comm)
 {
   math::FrameAlphaBeta currents = math::clarke_transform(line_currents);
   math::FrameAlphaBeta voltages;
@@ -23,7 +21,7 @@ float observers::BemfObserver::loop(const math::FrameABC& line_currents,
   {
     // Vbus Filter
     constexpr float alpha = 0.01;
-    Vbus = alpha * Vbus + (1-alpha) * Vbus_prev;
+    Vbus = alpha * Vbus + (1 - alpha) * Vbus_prev;
     Vbus_prev = Vbus;
 
     // Duty Correction
@@ -61,7 +59,7 @@ float observers::BemfObserver::loop(const math::FrameABC& line_currents,
     if (set_tracker_params.speed)
       return set_tracker_params.speed;
     else
-      return speed * alpha + (1 - alpha) * speed_prev; // Speed FIR Filter
+      return speed * alpha + (1 - alpha) * speed_prev;  // Speed FIR Filter
   }();
   this->m_speed_rpm = angular_velocity * 30 / (PI * num_rotor_poles / 2);
   this->e_theta_deg = [angular_velocity, angle, this]() -> float {

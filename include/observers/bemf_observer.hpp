@@ -21,11 +21,10 @@ public:
   float Ts;
 
   BemfObserver(const float Ts = 0, const uint8_t num_rotor_poles = 0);
-  float loop(const math::FrameABC& line_currents, const math::FrameABC& line_voltages,
-                  const math::FrameABC& duties, float Vbus, const SetBemfParams& set_bemf_params,
-                  const SetTrackerParams& set_tracker_params, const ExtBemfParams& ext_bemf_params,
-                  const ExtTrackerParams& ext_tracker_params, const uint8_t idle_mode, const bool force_bemf,
-                  const bool en_dis_6_step_comm);
+  float loop(const math::FrameABC& line_currents, const math::FrameABC& line_voltages, const math::FrameABC& duties,
+             float Vbus, const SetBemfParams& set_bemf_params, const SetTrackerParams& set_tracker_params,
+             const ExtBemfParams& ext_bemf_params, const ExtTrackerParams& ext_tracker_params, const uint8_t idle_mode,
+             const bool force_bemf, const bool en_dis_6_step_comm);
   float get_m_speed_rpm() const;
   float get_m_speed_rpm_raw() const;
   float get_phase_error_rad() const;

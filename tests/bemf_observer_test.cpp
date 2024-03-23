@@ -26,9 +26,8 @@ int main()
   for (float t = 0; t < 10; t += Ts)
   {
     math::FrameABC duties = math::inverse_clarke_transform(math::inverse_park_transform(U, angle));
-    angle =
-        bemf_observer.loop(line_currents, line_voltages, duties, Vbus, set_bemf_params, set_tracker_params,
-                           ext_bemf_params, ext_tracker_params, idle_mode, force_bemf, en_dis_6_step_comm);
+    angle = bemf_observer.loop(line_currents, line_voltages, duties, Vbus, set_bemf_params, set_tracker_params,
+                               ext_bemf_params, ext_tracker_params, idle_mode, force_bemf, en_dis_6_step_comm);
     std::cout << "Duties: " << duties.a << " " << duties.b << " " << duties.c << std::endl;
   }
 }
